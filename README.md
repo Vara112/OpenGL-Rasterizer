@@ -43,3 +43,32 @@ Documentation:
 
         I will stick with this method
 
+    <Optimisation>
+
+        Starting with the our equation for t(x) which then gets plugged into y(t), we can simplify this by doing:
+            y(x(t)) = a_y + ((x - a_x)*(b_y - a_y)) / (b_x - a_x)
+
+        A characteristic of this new equation is that the (x - a_x) part sweeps over 0, 1, 2, ..., (b_x - a_x) as the domain (dictated by our for loop for x) is x subset of (ax to bx).
+        So lets write a proof.
+        At loop Initialisation
+        x = ax, meaning (x - a_x) = (a_x - a_x) = 0
+        so:
+            y_0 = a_y + 0 * (b_y - a_y) / (b_x - a_x)
+                = a_y
+        Next iteration x += 1
+        This would give us the equation:
+            y_1 = a_y + ( 1 *(b_y - a_y)) / (b_x - a_x)
+            but remember we said y_0 = a_y, so the equation becomes:
+
+            y_1 = y_0 + (b_y - a_y) / (b_x - a_x)
+
+        Next iteration :
+            (Im expanding the equation a bit e.g 2x = x + x)
+            y_2 = y_0  + (b_y - a_y) / (b_x - a_x)  +  (b_y - a_y) / (b_x - a_x)
+            We notice a pattern.
+            This part of the equation: y_0  + (b_y - a_y) / (b_x - a_x) is equal to y_1
+            So the equation becomes
+            y_2 = y_1 + (b_y - a_y) / (b_x - a_x)
+        
+        The recurrence relation of our equations becomes:
+            y_n = y_{n - 1} + (b_y - a_y) / (b_x - a_x)

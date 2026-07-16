@@ -1,4 +1,6 @@
 #include <cmath>
+#include <cstdlib>
+#include <ctime>
 #include "tgaimage.h"
 
 #define LINESTEP    0.02         //Step size of bresenham's line algo
@@ -12,14 +14,15 @@ constexpr TGAColor yellow  = {  0, 200, 255, 255};
 
 
 
-void line_method1(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color);
-void line_method2(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color);
+void basic_line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color);
+void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color);
 
 int main(int argc, char** argv) {
     constexpr int width  = 64;
     constexpr int height = 64;
     TGAImage framebuffer(width, height, TGAImage::RGB);
 
+    /* 
     int ax =  7, ay =  3;
     int bx = 12, by = 37;
     int cx = 62, cy = 53;
@@ -33,6 +36,14 @@ int main(int argc, char** argv) {
     line(ax, bx, ay, by, framebuffer, green);
     line(bx, cx, by, cy, framebuffer, red);   
     line(cx, ax, cy, ay, framebuffer, blue);       
+    */
+
+    std::srand(std::time({}));
+    for (int i=0; i<(1<<24); i++) {
+        int ax = rand()%width, ay = rand()%height;
+        int bx = rand()%width, by = rand()%height;
+        line(ax, ay, bx, by, framebuffer, { rand()%255, rand()%255, rand()%255, rand()%255 });
+    }
 
 
 
@@ -65,10 +76,8 @@ void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color)
     //Guarantees smooth lines as step size is the largest distance (either between x values or y values)
 
 
-    float t;
     int y;
-    
-
+    float cy;
 
 
     bool transpose = abs(ax-bx) < abs(ay-by);
@@ -89,16 +98,27 @@ void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color)
 
     }
     
-    for(int x = ax; x <= bx; x++){
-        t = (x - ax) / static_cast<float>(bx - ax);
-        y = std::round (ay + t * (by - ay));
+    cy = static_cast<float>(ay);    //Was having rounding issues, so store as float then latter round for int
+    
+    float yDiff = static_cast<float>(by - ay);
+    float xDiff = static_cast<float>(bx - ax);
 
+    float stepSizeY = yDiff/xDiff;  //Check line 46 in README.md (optimisation) for explanation
+
+    for(int x = ax; x <= bx; x++){
+
+        y = std::round(cy);
+        
         if(!transpose){
             framebuffer.set(x, y, color);
         }
         else{
+            //de-transpose
             framebuffer.set(y, x, color);
         }
+
+        cy += stepSizeY;
+
     }
 
 
