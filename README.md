@@ -29,6 +29,13 @@ Documentation:
         Issues with this method:
             The lines smoothness is determines by a step size of t. This can result in holes in the line, or even unnecessary computations as a step increase of t may be so small it cannot be rendered. 
         
+    <Method 2>
+        Instead of having functions x and y of variable t, we can rearrange to have 
 
+        X(t) = a_x + t * (b_x - a_x)
+        becomes
+        T(x) = (x - a_x) / (b_x - a_x)
 
- 
+        Using this we can iterate over X and compute for t, which we can plug into the Y(t) function to return the y value. 
+
+        The issue with this method is the quality is dictates by the gradient of x(t). For example if y's distance is large, but x only steps 3 pixels to the right, only 3 points will be drawn. 

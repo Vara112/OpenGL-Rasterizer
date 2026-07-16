@@ -12,8 +12,8 @@ constexpr TGAColor yellow  = {  0, 200, 255, 255};
 
 
 
-void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color);
-
+void line_method1(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color);
+void line_method2(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color);
 
 int main(int argc, char** argv) {
     constexpr int width  = 64;
@@ -30,9 +30,9 @@ int main(int argc, char** argv) {
 
     //draw lines
 
-    line(ax, bx, ay, by, framebuffer, green);
-    line(bx, cx, by, cy, framebuffer, red);   
-    line(cx, ax, cy, ay, framebuffer, blue);       
+    line_method2(ax, bx, ay, by, framebuffer, green);
+    line_method2(bx, cx, by, cy, framebuffer, red);   
+    line_method2(cx, ax, cy, ay, framebuffer, blue);       
 
 
 
@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
 
 
 
-void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color){
+void line_method1(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color){
     //Using Bresenham's line drawing algorithmn to draw lines between point A to point B
 
     //Storage variables
@@ -55,6 +55,20 @@ void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color)
         cy = std::round (ay + t * (by - ay));
 
         framebuffer.set(cx, cy, color);
+    }
+
+}
+
+void line_method2(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color){
+
+    float t;
+    int y;
+
+    for(int x = ax; x <= bx; x++){
+        t = (x - ax) / static_cast<float>(bx - ax);
+        y = std::round (ay + t * (by - ay));
+
+        framebuffer.set(x, y, color);
     }
 
 }
