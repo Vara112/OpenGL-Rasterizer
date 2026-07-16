@@ -90,4 +90,7 @@ Documentation:
             }
         
         One last performance optimisation.
-        A big
+        The if statement :  if(iError > bx - ax) harms performance heavily. The CPU trying to pipeline instructions, but if statements like this results in branch conditions. Branches requires the pipeline to be drained before hand (the compiler tries to guess the branch condition but its not a guarantee to be correct). Therefore i turn the if statement into an algebraic equation: 
+            y += by > ay ? 1 : -1 * (iError > bx - ax);
+            iError -= 2 * (bx-ax) * (iError > bx - ax); 
+        In this case, if the statement is false, everything is multiplied by 0, and no changes happen.

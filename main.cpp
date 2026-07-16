@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
     constexpr int height = 64;
     TGAImage framebuffer(width, height, TGAImage::RGB);
 
-/*    
+ /*  
     int ax =  7, ay =  3;
     int bx = 12, by = 37;
     int cx = 62, cy = 53;
@@ -77,7 +77,7 @@ void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color)
 
 
     int y;
-    int iError;
+    int iError = 0;
 
 
     bool transpose = abs(ax-bx) < abs(ay-by);
@@ -116,10 +116,9 @@ void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color)
 
         iError += 2 * std::abs(by-ay);  // We are checking  ierror > 1/2, but since we are working with int's
         //                                  multiply by 2 e.g  2 * ierror > 1
-        if(iError > bx - ax){
-            y += by > ay ? 1 : -1;
-            iError -= 2 * (bx-ax);
-        }
+
+        y += (by > ay ? 1 : -1) * (iError > bx - ax);
+        iError -= 2 * (bx-ax) * (iError > bx - ax);
 
     }
 
