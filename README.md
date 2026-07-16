@@ -14,6 +14,9 @@ Documentation:
 
 **Line Drawing**
     
+    PLEASE NOTE: This is an collection of my reading from Bresenham’s line drawing algorithm.
+
+
     Objective:
         To draw a line between point a to point b
         Using a vector approach there are multiple methods.
@@ -72,3 +75,19 @@ Documentation:
         
         The recurrence relation of our equations becomes:
             y_n = y_{n - 1} + (b_y - a_y) / (b_x - a_x)
+
+
+        Another optimisation used is using integers instead of floats (computationally less heavy is MOST cases). An assumptions we make for this to work is:
+            Y cannot increase by more than 1 for each step along x. We know this is true because if y(t) had a larger gradient then x(t) then the variables are transposed. 
+            Therefore, we can say for each iteration, Y can only have a value change by either -1, 0, 1. 
+
+        A variable is introduced called iError which is designed to hold the scaled accumulated residual error as an int. Each horizontal step (x increase) adds 2 * delta Y. When this accumulated value exceeds delta X the ideal line has moved by more than half a pixel away from the integer Y value, so therefore Y must be changed by either +1 or -1 depending on slope. The algorithm subtracts 2 delta x which represents one full vertical pixel that has been accounted for.
+
+        This is the code (i edited it in the actual doc):
+            if(iError > bx - ax){
+                y += by > ay ? 1 : -1;
+                iError -= 2 * (bx-ax);
+            }
+        
+        One last performance optimisation.
+        A big

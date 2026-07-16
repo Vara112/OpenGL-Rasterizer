@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
     constexpr int height = 64;
     TGAImage framebuffer(width, height, TGAImage::RGB);
 
-    /* 
+/*    
     int ax =  7, ay =  3;
     int bx = 12, by = 37;
     int cx = 62, cy = 53;
@@ -36,8 +36,8 @@ int main(int argc, char** argv) {
     line(ax, bx, ay, by, framebuffer, green);
     line(bx, cx, by, cy, framebuffer, red);   
     line(cx, ax, cy, ay, framebuffer, blue);       
-    */
-
+    
+*/
     std::srand(std::time({}));
     for (int i=0; i<(1<<24); i++) {
         int ax = rand()%width, ay = rand()%height;
@@ -77,7 +77,7 @@ void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color)
 
 
     int y;
-    float cy;
+    int iError;
 
 
     bool transpose = abs(ax-bx) < abs(ay-by);
@@ -98,16 +98,13 @@ void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color)
 
     }
     
-    cy = static_cast<float>(ay);    //Was having rounding issues, so store as float then latter round for int
+    y = ay;   
     
-    float yDiff = static_cast<float>(by - ay);
-    float xDiff = static_cast<float>(bx - ax);
-
-    float stepSizeY = yDiff/xDiff;  //Check line 46 in README.md (optimisation) for explanation
+    //NOT USED ANYMORE DUE TO INT OPTIMISATION. 
+    //float slope = static_cast<float>(by - ay)/static_cast<float>(bx - ax);  //Check line 46 in README.md (optimisation) for explanation
 
     for(int x = ax; x <= bx; x++){
 
-        y = std::round(cy);
         
         if(!transpose){
             framebuffer.set(x, y, color);
@@ -117,7 +114,12 @@ void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color)
             framebuffer.set(y, x, color);
         }
 
-        cy += stepSizeY;
+        iError += 2 * std::abs(by-ay);  // We are checking  ierror > 1/2, but since we are working with int's
+        //                                  multiply by 2 e.g  2 * ierror > 1
+        if(iError > bx - ax){
+            y += by > ay ? 1 : -1;
+            iError -= 2 * (bx-ax);
+        }
 
     }
 
