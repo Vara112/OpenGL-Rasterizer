@@ -62,34 +62,43 @@ void line_method1(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColo
 void line_method2(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color){
 
     float t;
-    int cx;
-    int cy;
+    int y;
     
 
-    if((abs(bx - ax) > abs(by - bx))){  //We want to choose
 
 
+    bool transpose = abs(ax-bx) < abs(ay-by);
 
-        for(int x = ax; x <= bx; x++){
-            t = (x - ax) / static_cast<float>(bx - ax);
-            cy = std::round (ay + t * (by - ay));
+    //Check if we need to transpose (y is steeper then x) 
+    if (transpose){
 
-            cx = x;
-
-            framebuffer.set(cx, cy, color);
-        }
-
-    }else{
-
-        for(int y = ay; y <= by; y++){
-            t = (y - ay) / static_cast<float>(by - ay);
-            cx = std::round (ax + t * (bx - ax));
-
-            cy = y;
-
-            framebuffer.set(cx, cy, color);
-        }
+        std::swap(ax, ay);
+        std::swap(bx, by);
 
     }
+
+    //Ensure we are always drawing left to right
+    if(ax>bx){
+
+        std::swap(ax, bx);
+        std::swap(ay, by);
+
+    }
+    
+    for(int x = ax; x <= bx; x++){
+        t = (x - ax) / static_cast<float>(bx - ax);
+        y = std::round (ay + t * (by - ay));
+
+        if(!transpose){
+            framebuffer.set(x, y, color);
+        }
+        else{
+            framebuffer.set(y, x, color);
+        }
+    }
+
+
+
+    
 
 }
