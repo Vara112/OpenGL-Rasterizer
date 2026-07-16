@@ -30,9 +30,9 @@ int main(int argc, char** argv) {
 
     //draw lines
 
-    line_method2(ax, bx, ay, by, framebuffer, green);
-    line_method2(bx, cx, by, cy, framebuffer, red);   
-    line_method2(cx, ax, cy, ay, framebuffer, blue);       
+    line(ax, bx, ay, by, framebuffer, green);
+    line(bx, cx, by, cy, framebuffer, red);   
+    line(cx, ax, cy, ay, framebuffer, blue);       
 
 
 
@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
 
 
 
-void line_method1(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color){
+void basic_line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color){
     //Using Bresenham's line drawing algorithmn to draw lines between point A to point B
 
     //Storage variables
@@ -59,7 +59,11 @@ void line_method1(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColo
 
 }
 
-void line_method2(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color){
+void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color){
+
+    //Version iterates over x or y (depending on which one is steeper) for a function of T.
+    //Guarantees smooth lines as step size is the largest distance (either between x values or y values)
+
 
     float t;
     int y;
