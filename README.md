@@ -38,4 +38,4 @@ Documentation:
 
         Using this we can iterate over X and compute for t, which we can plug into the Y(t) function to return the y value. 
 
-        The issue with this method is the quality is dictates by the gradient of x(t). For example if y's distance is large, but x only steps 3 pixels to the right, only 3 points will be drawn. 
+        The issue with this method is the quality is dictates by the gradient of x(t). For example if y's distance is large, but x only steps 3 pixels to the right, only 3 points will be drawn. (Basically just transpose the image)

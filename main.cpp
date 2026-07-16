@@ -62,13 +62,34 @@ void line_method1(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColo
 void line_method2(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color){
 
     float t;
-    int y;
+    int cx;
+    int cy;
+    
 
-    for(int x = ax; x <= bx; x++){
-        t = (x - ax) / static_cast<float>(bx - ax);
-        y = std::round (ay + t * (by - ay));
+    if((abs(bx - ax) > abs(by - bx))){  //We want to choose
 
-        framebuffer.set(x, y, color);
+
+
+        for(int x = ax; x <= bx; x++){
+            t = (x - ax) / static_cast<float>(bx - ax);
+            cy = std::round (ay + t * (by - ay));
+
+            cx = x;
+
+            framebuffer.set(cx, cy, color);
+        }
+
+    }else{
+
+        for(int y = ay; y <= by; y++){
+            t = (y - ay) / static_cast<float>(by - ay);
+            cx = std::round (ax + t * (bx - ax));
+
+            cy = y;
+
+            framebuffer.set(cx, cy, color);
+        }
+
     }
 
 }
