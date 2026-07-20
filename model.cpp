@@ -17,7 +17,7 @@ Model::Model(const std::string filename){
 
     std::string line;
     while (!in.eof()){
-        std:getline(in line);
+        std:getline(in, line);
 
 
         

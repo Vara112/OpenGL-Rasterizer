@@ -16,7 +16,7 @@ if(iwyu)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU|Intel")
-  add_compile_options(-Wall)
+  add_compile_options(-Wall -Wno-c++11-narrowing)
 endif()
 
 find_package(OpenMP COMPONENTS CXX)
