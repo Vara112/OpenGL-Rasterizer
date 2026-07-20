@@ -20,7 +20,7 @@ Model::Model(const std::string filename){
         std:getline(in, line);
 
 
-        
+        printf("Hello im initalising\n");
 
 
 

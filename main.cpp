@@ -42,7 +42,8 @@ int main(int argc, char** argv) {
 
 //model.cpp testing:
 
-
+    Model myModel("./obj/diablo3_pose/diablo3_pose.obj");
+    
 
     std::srand(std::time({}));
     for (int i=0; i<(1<<24); i++) {
