@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 #include "tgaimage.h"
+#include "model.h"
 
 #define LINESTEP    0.02         //Step size of bresenham's line algo
 
@@ -38,6 +39,11 @@ int main(int argc, char** argv) {
     line(cx, ax, cy, ay, framebuffer, blue);       
     
 */
+
+//model.cpp testing:
+
+
+
     std::srand(std::time({}));
     for (int i=0; i<(1<<24); i++) {
         int ax = rand()%width, ay = rand()%height;

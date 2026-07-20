@@ -1,5 +1,5 @@
 #include <vector>
-#include "geometry.h"
+#include "vec.h"
 
 class Model {
     std::vector<vec3> verts = {};    // array of vertices
