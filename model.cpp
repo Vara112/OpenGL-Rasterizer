@@ -15,12 +15,20 @@ Model::Model(const std::string filename){
         return;
     }
 
+    float x, y, z;
+    std::string trash;
+
     std::string line;
     while (!in.eof()){
         std:getline(in, line);
 
 
-        printf("Hello im initalising\n");
+        if (line[0] == 'v' && line[1]== ' '){
+            std::istringstream iss(line);
+            iss >> trash >> x >> y >> z;
+            printf("X: %f, Y: %f, Z: %f \n", x, y, z);
+        }
+
 
 
 
