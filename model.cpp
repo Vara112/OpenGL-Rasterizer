@@ -16,20 +16,42 @@ Model::Model(const std::string filename){
         return;
     }
 
-    float x, y, z;
+    
     std::string trash;
 
     std::string line;
     while (!in.eof()){
-        std:getline(in, line);
+        std::getline(in, line);
+
+
 
 
         if (line[0] == 'v' && line[1]== ' '){
             std::istringstream iss(line);
+            float x, y, z;
             iss >> trash >> x >> y >> z;
             
             //Add vertex points to my vertex's vector
             verts.push_back({x, y, z});
+
+
+        }
+        else if (line[0] == 'f'){
+            //faces
+
+            std::istringstream iss(line);
+            std::string vecA, vecB, vecC;
+            iss >> trash >> vecA >> vecB >> vecC;
+            int a, b, c;
+ 
+            std::sscanf(vecA.c_str(), "%d/%d/%d", &a, &b, &c);
+            facet_vrt.push_back(a);
+
+            std::sscanf(vecB.c_str(), "%d/%d/%d", &a, &b, &c);
+            facet_vrt.push_back(a);
+
+            std::sscanf(vecC.c_str(), "%d/%d/%d", &a, &b, &c);
+            facet_vrt.push_back(a);
 
 
         }
@@ -40,6 +62,13 @@ Model::Model(const std::string filename){
     }
 
 }
+
+int Model::nfaces() const{
+
+    return static_cast<int>(facet_vrt.size()/3);
+
+}
+
 int Model::nverts() const{
     //Returns the number of vertex;s in the models vector
     return verts.size();
@@ -52,3 +81,10 @@ vec3 Model::vert(const int i) const {
     return verts[i];
 }
 
+
+vec3 Model::vert(const int iface, const int nthvert) const{
+
+    int index = (iface * 3) + nthvert;
+
+    return verts[index];
+}
