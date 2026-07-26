@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 //model.cpp testing:
 
     Model myModel("./obj/diablo3_pose/diablo3_pose.obj");
-    //Model myModel("./obj/cube.obj"); <- Not triangulated 
+
     
 /*
     std::srand(std::time({}));
@@ -58,13 +58,12 @@ int main(int argc, char** argv) {
 
 
     for (int i = 0; i < myModel.nverts(); i++){
-        vec3 vecA = myModel.vert(i);
+        vec3 vecA = myModel.vert(i); 
         int ax = std::round((vecA.x * width/2 ) + width/2);
         int ay = std::round((vecA.y * height/2 ) + height/2);
 
         framebuffer.set(ax, ay, white);
     }
-
     for(int i = 0; i < myModel.nfaces(); i ++){
         vec3 vecA = myModel.vert(i, 0);
         vec3 vecB = myModel.vert(i, 1);
@@ -73,7 +72,6 @@ int main(int argc, char** argv) {
         triangle(vecA, vecB, vecC, framebuffer, red, width, height);
 
     }
-
     framebuffer.write_tga_file("framebuffer.tga");
     return 0;
 }
@@ -156,7 +154,7 @@ void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color)
 }
 
 void triangle(vec3 vecA, vec3 vecB, vec3 vecC, TGAImage &framebuffer, TGAColor color, int width, int height){
-
+ 
     int ax = std::round((vecA.x * width/2 ) + width/2);
     int ay = std::round((vecA.y * height/2 ) + height/2);
 
@@ -165,7 +163,7 @@ void triangle(vec3 vecA, vec3 vecB, vec3 vecC, TGAImage &framebuffer, TGAColor c
 
     int cx = std::round((vecC.x * width/2 ) + width/2);
     int cy = std::round((vecC.y * height/2 ) + height/2);
-
+    
     line(ax, bx, ay, by, framebuffer, color);
     line(bx, cx, by, cy, framebuffer, color);   
     line(cx, ax, cy, ay, framebuffer, color);    
