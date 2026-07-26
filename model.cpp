@@ -93,5 +93,5 @@ vec3 Model::vert(const int iface, const int nthvert) const{
 
     int vertInedx = facet_vrt[index];
 
-    return vert(vertInedx);
+    return vert(vertInedx - 1);
 }
