@@ -2,7 +2,8 @@
 #include <sstream>
 #include <iostream>
 #include "model.h"
-
+#include <vector>
+#include <typeinfo>
 
 Model::Model(const std::string filename){
     
@@ -26,7 +27,11 @@ Model::Model(const std::string filename){
         if (line[0] == 'v' && line[1]== ' '){
             std::istringstream iss(line);
             iss >> trash >> x >> y >> z;
-            printf("X: %f, Y: %f, Z: %f \n", x, y, z);
+            
+            //Add vertex points to my vertex's vector
+            verts.push_back({x, y, z});
+
+
         }
 
 
@@ -35,3 +40,15 @@ Model::Model(const std::string filename){
     }
 
 }
+int Model::nverts() const{
+    //Returns the number of vertex;s in the models vector
+    return verts.size();
+}
+
+
+
+vec3 Model::vert(const int i) const {
+    //Allows us to access vertex's from our models vector
+    return verts[i];
+}
+

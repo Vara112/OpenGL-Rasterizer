@@ -19,8 +19,8 @@ void basic_line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor 
 void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color);
 
 int main(int argc, char** argv) {
-    constexpr int width  = 64;
-    constexpr int height = 64;
+    constexpr int width  = 1024;
+    constexpr int height = 1024;
     TGAImage framebuffer(width, height, TGAImage::RGB);
 
  /*  
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 
     Model myModel("./obj/diablo3_pose/diablo3_pose.obj");
     
-
+/*
     std::srand(std::time({}));
     for (int i=0; i<(1<<24); i++) {
         int ax = rand()%width, ay = rand()%height;
@@ -52,6 +52,16 @@ int main(int argc, char** argv) {
         line(ax, ay, bx, by, framebuffer, { rand()%255, rand()%255, rand()%255, rand()%255 });
     }
 
+*/
+
+
+    for (int i = 0; i < myModel.nverts(); i++){
+        vec3 vecA = myModel.vert(i);
+        int ax = std::round((vecA.x * width/2 ) + width/2);
+        int ay = std::round((vecA.y * height/2 ) + height/2);
+
+        framebuffer.set(ax, ay, white);
+    }
 
 
     framebuffer.write_tga_file("framebuffer.tga");
