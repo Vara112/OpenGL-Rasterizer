@@ -85,8 +85,13 @@ vec3 Model::vert(const int i) const {
 vec3 Model::vert(const int iface, const int nthvert) const{
 
    //BUG: Obj's faces are 1 based (not 0 based). Must offset all index's by 1
+   //Order of operations:
+   //1. Search for vertex index's in facet_vrt
+   //2. Then return the vert for that index
 
     int index = (iface * 3) + nthvert;
 
-    return verts[index + 1];
+    int vertInedx = facet_vrt[index];
+
+    return vert(vertInedx);
 }
