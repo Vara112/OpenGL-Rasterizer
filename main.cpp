@@ -25,18 +25,10 @@ int main(int argc, char** argv) {
     constexpr int height = 128;
     TGAImage framebuffer(width, height, TGAImage::RGB);
 
-    Model myModel("./obj/diablo3_pose/diablo3_pose.obj");
 
-
-
-    for(int i = 0; i < myModel.nfaces(); i ++){
-        vec3 vecA = myModel.vert(i, 0);
-        vec3 vecB = myModel.vert(i, 1);
-        vec3 vecC = myModel.vert(i, 2);
-
-        triangle2D(project2D(vecA, width, height), project2D(vecB, width, height), project2D(vecC, width, height), framebuffer, red);
-
-    }
+    triangle2D(vec2(7, 45), vec2(35, 100), vec2(45, 60), framebuffer, red);
+    triangle2D(vec2(120, 35), vec2(90, 5), vec2(45, 110), framebuffer, white);
+    triangle2D(vec2(115, 83), vec2(80, 90), vec2(85, 120), framebuffer, green);
 
     framebuffer.write_tga_file("framebuffer.tga");
     return 0;
