@@ -19,6 +19,7 @@ void basic_line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor 
 void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color);
 void triangle(vec3 vecA, vec3 vecB, vec3 vecC, TGAImage &framebuffer, TGAColor color, int width, int height);
 
+
 int main(int argc, char** argv) {
     constexpr int width  = 1024;
     constexpr int height = 1024;
@@ -152,6 +153,7 @@ void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color)
     
 
 }
+
 
 void triangle(vec3 vecA, vec3 vecB, vec3 vecC, TGAImage &framebuffer, TGAColor color, int width, int height){
  
