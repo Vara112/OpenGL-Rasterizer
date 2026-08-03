@@ -1,0 +1,49 @@
+
+ /*  
+    int ax =  7, ay =  3;
+    int bx = 12, by = 37;
+    int cx = 62, cy = 53;
+
+    framebuffer.set(ax, ay, white);
+    framebuffer.set(bx, by, white);
+    framebuffer.set(cx, cy, white);
+
+    //draw lines
+
+    line(ax, bx, ay, by, framebuffer, green);
+    line(bx, cx, by, cy, framebuffer, red);   
+    line(cx, ax, cy, ay, framebuffer, blue);       
+    
+*/
+
+//model.cpp testing:
+
+    Model myModel("./obj/diablo3_pose/diablo3_pose.obj");
+
+    
+/*
+    std::srand(std::time({}));
+    for (int i=0; i<(1<<24); i++) {
+        int ax = rand()%width, ay = rand()%height;
+        int bx = rand()%width, by = rand()%height;
+        line(ax, ay, bx, by, framebuffer, { rand()%255, rand()%255, rand()%255, rand()%255 });
+    }
+
+*/
+
+
+    for (int i = 0; i < myModel.nverts(); i++){
+        vec3 vecA = myModel.vert(i); 
+        int ax = std::round((vecA.x * width/2 ) + width/2);
+        int ay = std::round((vecA.y * height/2 ) + height/2);
+
+        framebuffer.set(ax, ay, white);
+    }
+    for(int i = 0; i < myModel.nfaces(); i ++){
+        vec3 vecA = myModel.vert(i, 0);
+        vec3 vecB = myModel.vert(i, 1);
+        vec3 vecC = myModel.vert(i, 2);
+
+        triangle(vecA, vecB, vecC, framebuffer, red, width, height);
+
+    }

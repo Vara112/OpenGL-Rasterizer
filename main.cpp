@@ -17,62 +17,27 @@ constexpr TGAColor yellow  = {  0, 200, 255, 255};
 
 void basic_line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color);
 void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color);
-void triangle(vec3 vecA, vec3 vecB, vec3 vecC, TGAImage &framebuffer, TGAColor color, int width, int height);
-
+void triangle2D(vec2 vecA, vec2 vecB, vec2 vecC, TGAImage &framebuffer, TGAColor color);
+vec2 project2D(vec3 vec, int width, int height);
 
 int main(int argc, char** argv) {
-    constexpr int width  = 1024;
-    constexpr int height = 1024;
+    constexpr int width  = 128;
+    constexpr int height = 128;
     TGAImage framebuffer(width, height, TGAImage::RGB);
-
- /*  
-    int ax =  7, ay =  3;
-    int bx = 12, by = 37;
-    int cx = 62, cy = 53;
-
-    framebuffer.set(ax, ay, white);
-    framebuffer.set(bx, by, white);
-    framebuffer.set(cx, cy, white);
-
-    //draw lines
-
-    line(ax, bx, ay, by, framebuffer, green);
-    line(bx, cx, by, cy, framebuffer, red);   
-    line(cx, ax, cy, ay, framebuffer, blue);       
-    
-*/
-
-//model.cpp testing:
 
     Model myModel("./obj/diablo3_pose/diablo3_pose.obj");
 
-    
-/*
-    std::srand(std::time({}));
-    for (int i=0; i<(1<<24); i++) {
-        int ax = rand()%width, ay = rand()%height;
-        int bx = rand()%width, by = rand()%height;
-        line(ax, ay, bx, by, framebuffer, { rand()%255, rand()%255, rand()%255, rand()%255 });
-    }
-
-*/
 
 
-    for (int i = 0; i < myModel.nverts(); i++){
-        vec3 vecA = myModel.vert(i); 
-        int ax = std::round((vecA.x * width/2 ) + width/2);
-        int ay = std::round((vecA.y * height/2 ) + height/2);
-
-        framebuffer.set(ax, ay, white);
-    }
     for(int i = 0; i < myModel.nfaces(); i ++){
         vec3 vecA = myModel.vert(i, 0);
         vec3 vecB = myModel.vert(i, 1);
         vec3 vecC = myModel.vert(i, 2);
 
-        triangle(vecA, vecB, vecC, framebuffer, red, width, height);
+        triangle2D(project2D(vecA, width, height), project2D(vecB, width, height), project2D(vecC, width, height), framebuffer, red);
 
     }
+
     framebuffer.write_tga_file("framebuffer.tga");
     return 0;
 }
@@ -155,19 +120,18 @@ void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color)
 }
 
 
-void triangle(vec3 vecA, vec3 vecB, vec3 vecC, TGAImage &framebuffer, TGAColor color, int width, int height){
- 
-    int ax = std::round((vecA.x * width/2 ) + width/2);
-    int ay = std::round((vecA.y * height/2 ) + height/2);
-
-    int bx = std::round((vecB.x * width/2 ) + width/2);
-    int by = std::round((vecB.y * height/2 ) + height/2);
-
-    int cx = std::round((vecC.x * width/2 ) + width/2);
-    int cy = std::round((vecC.y * height/2 ) + height/2);
+void triangle2D(vec2 vecA, vec2 vecB, vec2 vecC, TGAImage &framebuffer, TGAColor color){
     
-    line(ax, bx, ay, by, framebuffer, color);
-    line(bx, cx, by, cy, framebuffer, color);   
-    line(cx, ax, cy, ay, framebuffer, color);    
+    line(vecA.x, vecB.x, vecA.y, vecB.y, framebuffer, color);
+    line(vecB.x, vecC.x, vecB.y, vecC.y, framebuffer, color);   
+    line(vecC.x, vecA.x, vecC.y, vecA.y, framebuffer, color);    
+
+}
+
+vec2 project2D(vec3 vec, int width, int height){
+    //Scales a vec3, and overwrites the original vec 
+    //This will need to change when camera angle is not fixed
+
+    return vec2 (((vec.x + 1.)  * width/2), ((vec.y + 1.)  * height/2));
 
 }
