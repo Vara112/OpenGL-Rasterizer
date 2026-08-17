@@ -94,3 +94,11 @@ Documentation:
             y += by > ay ? 1 : -1 * (iError > bx - ax);
             iError -= 2 * (bx-ax) * (iError > bx - ax); 
         In this case, if the statement is false, everything is multiplied by 0, and no changes happen.
+
+
+
+**Triangle Rasterisation**
+
+
+    - Scanline Rendering
+        Works using row by row basis. Sorts the verticies 
