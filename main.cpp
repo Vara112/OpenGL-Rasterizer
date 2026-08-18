@@ -21,6 +21,8 @@ void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color)
 void triangle2D(vec2 vecA, vec2 vecB, vec2 vecC, TGAImage &framebuffer, TGAColor color);
 vec2 project2D(vec3 vec, int width, int height);
 void scanline_fill(vec2 vecA, vec2 vecB, vec2 vecC, TGAImage &framebuffer, TGAColor colour);
+void bbox_triangle(vec2 vecA, vec2 vecB, vec2 vecC, TGAImage &framebuffer, TGAColor colour);
+bool bounds_check(const vec2 &a, const vec2 &b, const vec2 &c, const vec2 &p);
 
 int main(int argc, char** argv) {
     constexpr int width  = 128;
@@ -28,9 +30,9 @@ int main(int argc, char** argv) {
     TGAImage framebuffer(width, height, TGAImage::RGB);
 
 
-    scanline_fill(vec2(7, 45), vec2(35, 100), vec2(45, 60), framebuffer, red);
-    scanline_fill(vec2(120, 35), vec2(90, 5), vec2(45, 110), framebuffer, green);
-    scanline_fill(vec2(115, 83), vec2(80, 90), vec2(85, 120), framebuffer, blue);
+    bbox_triangle(vec2(7, 45), vec2(35, 100), vec2(45, 60), framebuffer, red);
+    bbox_triangle(vec2(120, 35), vec2(90, 5), vec2(45, 110), framebuffer, green);
+    bbox_triangle(vec2(115, 83), vec2(80, 90), vec2(85, 120), framebuffer, blue);
 
     framebuffer.write_tga_file("framebuffer.tga");
     return 0;
@@ -145,14 +147,36 @@ void scanline_fill(vec2 vecA, vec2 vecB, vec2 vecC, TGAImage &framebuffer, TGACo
     //This splits each triangle into two sub triangles
 
     int height = vecC.y - vecA.y;
+
+    //Bottom Half
     if(vecA.y != vecB.y){
         int segment_height = vecB.y - vecA.y;
-        //Bottom Half
+
         for (int y = vecA.y; y <= vecB.y; y++) {
             //basically at position y we want to calculate x1, x2, for the two lines coming from that point
             //Take parametric equation for a line in terms of x(t) y(t), and change them to x(t(y)) 
             int x1 = vecA.x + ((y-vecA.y)*(vecC.x-vecA.x)) /height;
             int x2 = vecA.x + ((y-vecA.y)*(vecB.x-vecA.x)) / segment_height;
+           
+           for(int x=std::min(x1, x2); x <= std::max(x1, x2); x++){
+                framebuffer.set(x, y, colour);
+           }
+
+        }
+
+    }
+
+    
+    //Bottom Half
+    if(vecB.y != vecC.y){
+        int segment_height = vecC.y - vecB.y;
+
+        for (int y = vecB.y; y <= vecC.y; y++) {
+            
+            //Same logic as top half
+
+            int x1 = vecA.x + ((y-vecA.y)*(vecC.x-vecA.x)) /height;
+            int x2 = vecB.x + ((y-vecB.y)*(vecC.x-vecB.x)) / segment_height;
            
            for(int x=std::min(x1, x2); x <= std::max(x1, x2); x++){
                 framebuffer.set(y, x, colour);
@@ -161,4 +185,39 @@ void scanline_fill(vec2 vecA, vec2 vecB, vec2 vecC, TGAImage &framebuffer, TGACo
         }
 
     }
+}
+
+
+void bbox_triangle(vec2 vecA, vec2 vecB, vec2 vecC, TGAImage &framebuffer, TGAColor colour){
+    int bbmin_x = std::min(std::min(vecA.x, vecB.x),vecC.x);
+    int bbmax_x = std::max(std::max(vecA.x, vecB.x),vecC.x);
+
+    int bbmin_y = std::min(std::min(vecA.y, vecB.y),vecC.y);
+    int bbmax_y = std::max(std::max(vecA.y, vecB.y),vecC.y);
+
+    //Paralise it
+    #pragma omp parallel for
+    for(int x = bbmin_x; x<=bbmax_x; x++){
+
+        for(int y = bbmin_y; y<=bbmax_y; y++){
+            if(bounds_check(vecA, vecB, vecC, vec2 (x, y))){
+                framebuffer.set(x, y, colour);
+            }
+
+        }
+    }
+}
+
+
+bool bounds_check(const vec2 &a, const vec2 &b, const vec2 &c, const vec2 &p){
+    /*
+    Uses barycentric coordinates to determine if point p lays inside or outside the triangle made using A B & C
+     */
+    float det = (b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y);
+
+    float lamda_1 = ((b.y - c.y) * (p.x - c.x) + (c.x - b.x) * (p.y - c.y)) / det;
+    float lamda_2 = ((c.y - a.y) * (p.x - c.x) + (a.x - c.x) * (p.y - c.y)) / det;
+    float lamda_3 = 1.0f - lamda_1 - lamda_2;
+
+    return (lamda_1 >= 0) && (lamda_2 >= 0) && (lamda_3 >= 0);
 }

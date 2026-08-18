@@ -109,3 +109,11 @@ Documentation:
 
         PROBLEMS:
         We are now exposed to the same limitations as show in earlier stages of our line drawing. This will be addressed later.
+
+
+
+    - Barycentric Coordinate System
+    For a triangle with vertices A, B, C, any point P in the plane can be written as:
+    P = ⍺ * A + β * B + γ *C
+    where:
+    ⍺ + β + γ = 1
