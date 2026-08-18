@@ -25,15 +25,29 @@ void bbox_triangle(vec2 vecA, vec2 vecB, vec2 vecC, TGAImage &framebuffer, TGACo
 bool bounds_check(const vec2 &a, const vec2 &b, const vec2 &c, const vec2 &p);
 
 int main(int argc, char** argv) {
-    constexpr int width  = 128;
-    constexpr int height = 128;
+    constexpr int width  = 1024;
+    constexpr int height = 1024;
     TGAImage framebuffer(width, height, TGAImage::RGB);
 
-
+    /*
     bbox_triangle(vec2(7, 45), vec2(35, 100), vec2(45, 60), framebuffer, red);
     bbox_triangle(vec2(120, 35), vec2(90, 5), vec2(45, 110), framebuffer, green);
     bbox_triangle(vec2(115, 83), vec2(80, 90), vec2(85, 120), framebuffer, blue);
+    */
 
+    Model myModel("./obj/african_head/african_head.obj");
+
+
+    for(int i = 0; i < myModel.nfaces(); i ++){
+        vec3 vecA = myModel.vert(i, 0);
+        vec3 vecB = myModel.vert(i, 1);
+        vec3 vecC = myModel.vert(i, 2);
+        triangle2D(project2D(vecA, width, height), project2D(vecB, width, height), project2D(vecC, width, height), framebuffer, red);
+
+    }
+
+
+    
     framebuffer.write_tga_file("framebuffer.tga");
     return 0;
 }
@@ -179,7 +193,7 @@ void scanline_fill(vec2 vecA, vec2 vecB, vec2 vecC, TGAImage &framebuffer, TGACo
             int x2 = vecB.x + ((y-vecB.y)*(vecC.x-vecB.x)) / segment_height;
            
            for(int x=std::min(x1, x2); x <= std::max(x1, x2); x++){
-                framebuffer.set(y, x, colour);
+                framebuffer.set(x, y, colour);
            }
 
         }
