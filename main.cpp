@@ -42,8 +42,13 @@ int main(int argc, char** argv) {
         vec3 vecA = myModel.vert(i, 0);
         vec3 vecB = myModel.vert(i, 1);
         vec3 vecC = myModel.vert(i, 2);
-        triangle2D(project2D(vecA, width, height), project2D(vecB, width, height), project2D(vecC, width, height), framebuffer, red);
+        
+        //triangle2D(project2D(vecA, width, height), project2D(vecB, width, height), project2D(vecC, width, height), framebuffer, red);
+        vec2 a = project2D(vecA, width, height);
+        vec2 b = project2D(vecB, width, height);
+        vec2 c = project2D(vecC, width, height);
 
+        bbox_triangle(a, b, c, framebuffer, { rand()%255, rand()%255, rand()%255, rand()%255 });
     }
 
 
