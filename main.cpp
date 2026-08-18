@@ -20,7 +20,7 @@ void basic_line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor 
 void line(int ax, int bx, int ay, int by, TGAImage &framebuffer, TGAColor color);
 void triangle2D(vec2 vecA, vec2 vecB, vec2 vecC, TGAImage &framebuffer, TGAColor color);
 vec2 project2D(vec3 vec, int width, int height);
-void scanline_fill(vec2 vecA, vec2 vecB, vec2 vecC, TGAImage &framebuffer, TGAColor red, TGAColor green);
+void scanline_fill(vec2 vecA, vec2 vecB, vec2 vecC, TGAImage &framebuffer, TGAColor colour);
 
 int main(int argc, char** argv) {
     constexpr int width  = 128;
@@ -28,9 +28,9 @@ int main(int argc, char** argv) {
     TGAImage framebuffer(width, height, TGAImage::RGB);
 
 
-    scanline_fill(vec2(7, 45), vec2(35, 100), vec2(45, 60), framebuffer, red, green);
-    scanline_fill(vec2(120, 35), vec2(90, 5), vec2(45, 110), framebuffer, red, green);
-    scanline_fill(vec2(115, 83), vec2(80, 90), vec2(85, 120), framebuffer, red, green);
+    scanline_fill(vec2(7, 45), vec2(35, 100), vec2(45, 60), framebuffer, red);
+    scanline_fill(vec2(120, 35), vec2(90, 5), vec2(45, 110), framebuffer, green);
+    scanline_fill(vec2(115, 83), vec2(80, 90), vec2(85, 120), framebuffer, blue);
 
     framebuffer.write_tga_file("framebuffer.tga");
     return 0;
@@ -131,7 +131,7 @@ vec2 project2D(vec3 vec, int width, int height){
 }
 
 
-void scanline_fill(vec2 vecA, vec2 vecB, vec2 vecC, TGAImage &framebuffer, TGAColor red, TGAColor green){
+void scanline_fill(vec2 vecA, vec2 vecB, vec2 vecC, TGAImage &framebuffer, TGAColor colour){
     /*
     *   We sort the y cords, and then draw a line left to right
     *   Since we know y cords are sequential we can use radix sort? This would ensure Theta(d * (n + b))
@@ -147,14 +147,16 @@ void scanline_fill(vec2 vecA, vec2 vecB, vec2 vecC, TGAImage &framebuffer, TGACo
     int height = vecC.y - vecA.y;
     if(vecA.y != vecB.y){
         int segment_height = vecB.y - vecA.y;
-        //Sweeps from bottom up
+        //Bottom Half
         for (int y = vecA.y; y <= vecB.y; y++) {
             //basically at position y we want to calculate x1, x2, for the two lines coming from that point
+            //Take parametric equation for a line in terms of x(t) y(t), and change them to x(t(y)) 
             int x1 = vecA.x + ((y-vecA.y)*(vecC.x-vecA.x)) /height;
             int x2 = vecA.x + ((y-vecA.y)*(vecB.x-vecA.x)) / segment_height;
-
-            framebuffer.set(x1, y, red);
-            framebuffer.set(x2, y, green);            
+           
+           for(int x=std::min(x1, x2); x <= std::max(x1, x2); x++){
+                framebuffer.set(y, x, colour);
+           }
 
         }
 

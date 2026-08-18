@@ -101,4 +101,11 @@ Documentation:
 
 
     - Scanline Rendering
-        Works using row by row basis. Sorts the verticies 
+        Works using row by row basis. First approach takes a triangle (3 points) and oranges them in ascending order so we can scan upwards.
+        From we split our triangle into 2, lower half and upper half, split by the y value of the second point (why we do this is explained later).
+        Then starting in the first half of the triangle we can recognise that from point A (first and lowest point) two lines straight lines will expand outwards, one for each of the 2 other points. We can reorange the line equation to give x in terms of y, and go from there.
+
+        Lastly all that is required is at each step of y, a sweep from left to right filling in colour between the two lines x1 and x2.
+
+        PROBLEMS:
+        We are now exposed to the same limitations as show in earlier stages of our line drawing. This will be addressed later.
